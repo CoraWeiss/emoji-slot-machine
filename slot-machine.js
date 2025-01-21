@@ -4,10 +4,11 @@ const EmojiSlotMachine = () => {
   const [slots, setSlots] = useState(['🤖', '🧠', '🔥']);
   const [isSpinning, setIsSpinning] = useState(false);
   
-  const slotOptions = {
-    slot1: ['🤖', '🥩'],
-    slot2: ['🧠'],
-    slot3: ['🔥']
+const slotOptions = {
+    slot1: ['🤖', '🥩', '🤖', '🥩'],
+    slot2: ['🧠', '🎯', '🧠', '💭'],
+    slot3: ['🔥', '💥', '🔥', '⚡']
+};
   };
   
   const spinSlots = () => {
@@ -22,8 +23,8 @@ const EmojiSlotMachine = () => {
       
       setSlots([
         slotOptions.slot1[Math.floor(Math.random() * slotOptions.slot1.length)],
-        slotOptions.slot2[0],
-        slotOptions.slot3[0]
+        slotOptions.slot2[Math.floor(Math.random() * slotOptions.slot2.length)],
+        slotOptions.slot3[Math.floor(Math.random() * slotOptions.slot3.length)]
       ]);
       
       if (time >= duration) {
@@ -31,8 +32,7 @@ const EmojiSlotMachine = () => {
         setIsSpinning(false);
       }
     }, intervals);
-  };
-
+};
   return React.createElement('div', { 
     className: "flex flex-col items-center justify-center p-8 bg-gray-100 rounded-lg" 
   }, [
