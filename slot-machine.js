@@ -14,22 +14,32 @@ const EmojiSlotMachine = () => {
     setIsSpinning(true);
     
     const duration = 2000;
-    const intervals = 50; // Faster updates
+    const intervals = 100;
     let time = 0;
     
     const spinInterval = setInterval(() => {
       time += intervals;
       
-      // Make first slot actually change
+      // Randomly shift all emojis during spin
       setSlots([
         slotOptions.slot1[Math.floor(Math.random() * slotOptions.slot1.length)],
-        slotOptions.slot2[0], // Keep brain but it will appear to spin
-        slotOptions.slot3[0]  // Keep fire but it will appear to spin
+        slotOptions.slot2[0],
+        slotOptions.slot3[0]
       ]);
+      
+      const allSlots = document.querySelectorAll('.slot-item');
+      allSlots.forEach(slot => {
+        slot.style.transform = `translateY(${Math.random() * 20 - 10}px) rotate(${Math.random() * 20 - 10}deg)`;
+      });
       
       if (time >= duration) {
         clearInterval(spinInterval);
         setIsSpinning(false);
+        // Reset positions
+        const allSlots = document.querySelectorAll('.slot-item');
+        allSlots.forEach(slot => {
+          slot.style.transform = 'none';
+        });
       }
     }, intervals);
   };
@@ -48,9 +58,7 @@ const EmojiSlotMachine = () => {
       slots.map((emoji, index) => 
         React.createElement('div', {
           key: index,
-          className: `text-6xl p-4 bg-gray-50 rounded-lg border-2 border-gray-200 transition-all ${
-            isSpinning ? 'animate-[spin_0.3s_linear_infinite]' : ''
-          }`
+          className: `slot-item text-6xl p-4 bg-gray-50 rounded-lg border-2 border-gray-200 transition-all duration-100`,
         }, emoji)
       )
     ),
