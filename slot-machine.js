@@ -5,9 +5,9 @@ const EmojiSlotMachine = () => {
   const [isSpinning, setIsSpinning] = useState(false);
   
   const slotOptions = {
-    slot1: ['🤖', '🥩', '🤖', '🥩'],
-    slot2: ['🧠', '🎯', '🧠', '💭'],
-    slot3: ['🔥', '💥', '🔥', '⚡']
+    slot1: ['🤖', '🥩'],
+    slot2: ['🧠'],
+    slot3: ['🔥']
   };
   
   const spinSlots = () => {
@@ -22,13 +22,24 @@ const EmojiSlotMachine = () => {
       
       setSlots([
         slotOptions.slot1[Math.floor(Math.random() * slotOptions.slot1.length)],
-        slotOptions.slot2[Math.floor(Math.random() * slotOptions.slot2.length)],
-        slotOptions.slot3[Math.floor(Math.random() * slotOptions.slot3.length)]
+        slots[1],
+        slots[2]
       ]);
+      
+      // Add visual spinning effect for all slots even if content doesn't change
+      const allSlots = document.querySelectorAll('.slot-item');
+      allSlots.forEach(slot => {
+        slot.style.transform = `translateY(${Math.random() * 10 - 5}px)`;
+      });
       
       if (time >= duration) {
         clearInterval(spinInterval);
         setIsSpinning(false);
+        // Reset positions
+        const allSlots = document.querySelectorAll('.slot-item');
+        allSlots.forEach(slot => {
+          slot.style.transform = 'translateY(0)';
+        });
       }
     }, intervals);
   };
@@ -45,4 +56,24 @@ const EmojiSlotMachine = () => {
       key: "slots"
     }, 
       slots.map((emoji, index) => 
-        React.createElement('div'
+        React.createElement('div', {
+          key: index,
+          className: `slot-item text-6xl p-4 bg-gray-50 rounded-lg border-2 border-gray-200 transition-transform ${isSpinning ? 'animate-bounce' : ''}`,
+        }, emoji)
+      )
+    ),
+    React.createElement('button', {
+      onClick: spinSlots,
+      disabled: isSpinning,
+      className: `px-8 py-4 text-xl font-bold text-white rounded-full shadow-lg ${
+        isSpinning ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 active:bg-blue-700'
+      }`,
+      key: "button"
+    }, isSpinning ? 'Spinning...' : 'SPIN!')
+  ]);
+};
+
+ReactDOM.render(
+  React.createElement(EmojiSlotMachine),
+  document.getElementById('root')
+);
